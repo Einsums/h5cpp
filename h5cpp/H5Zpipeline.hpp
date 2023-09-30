@@ -16,6 +16,7 @@
 #else
 
 #if defined(__APPLE__)
+#include <omp.h>
 #define aligned_alloc(x, y) omp_aligned_alloc(x, y)
 #endif
 #define aligned_free(x) free(x)
