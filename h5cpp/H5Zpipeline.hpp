@@ -15,10 +15,11 @@
 
 #else
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) && defined(H5CPP_USE_OMP_ALIGNED_ALLOC)
 #include <omp.h>
 #define aligned_alloc(x, y) omp_aligned_alloc(x, y)
 #endif
+
 #define aligned_free(x) free(x)
 
 #endif
