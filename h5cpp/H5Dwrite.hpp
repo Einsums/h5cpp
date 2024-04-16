@@ -20,6 +20,15 @@ namespace h5 {
 				H5Dwrite( static_cast<hid_t>( ds ), type, mem_space, file_space, static_cast<hid_t>(dxpl), ptr),
 							h5::error::io::dataset::write, h5::error::msg::write_dataset);
 	}
+	template <class T>
+	void write2( const h5::ds_t& ds, const h5::sp_t& mem_space, const h5::sp_t& file_space, const h5::dxpl_t& dxpl, const T* ptr  ){
+		H5CPP_CHECK_PROP( dxpl, h5::error::io::dataset::write, "invalid data transfer property" );
+		using element_t = typename h5::impl::decay<T>::type;
+		h5::dt_t<element_t> type;
+		H5CPP_CHECK_NZ(
+				H5Dwrite( static_cast<hid_t>( ds ), type, mem_space, file_space, static_cast<hid_t>(dxpl), ptr),
+							h5::error::io::dataset::write, h5::error::msg::write_dataset);
+	}
  	/** \func_write_hdr
  	*  TODO: write doxy for here  
 	*  \par_file_path \par_dataset_path \par_ref \par_offset \par_count \par_dxpl \tpar_T \returns_herr 
@@ -57,7 +66,7 @@ namespace h5 {
 			h5::select_all( mem_space );
 			h5::select_hyperslab( file_space, offset, stride, count, block);
 			// this can throw exception
-			h5::write<T>(ds, mem_space, file_space, dxpl, ptr);
+			h5::write2<T>(ds, mem_space, file_space, dxpl, ptr);
 		}
 		return ds;
 	} catch ( const std::exception& err ){
